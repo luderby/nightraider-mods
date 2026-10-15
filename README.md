@@ -101,6 +101,20 @@ dotnet build src\RareShop    -c Release
 
 ---
 
+## 维护笔记
+
+`tools/push-via-api.ps1` 是通过 **GitHub REST API** 提交的脚本
+（blobs → tree → commit → ref），在 `github.com:443` 不可达、只能用
+`api.github.com` 的环境下替代 `git push`：
+
+```powershell
+.\tools\push-via-api.ps1 -Repo owner/name -Branch main
+```
+
+正常情况下用普通 `git push` 即可，不需要这个脚本。
+
+---
+
 ## 目录结构
 
 ```
