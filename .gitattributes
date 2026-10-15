@@ -13,6 +13,8 @@
 .gitignore   text eol=lf
 .gitattributes text eol=lf
 
-# The tier tables are UTF-8 with BOM and are edited in Excel, so CRLF suits them.
-# The BOM is what makes Excel read the Chinese column names correctly.
-*.csv        text eol=crlf
+# The tier tables are UTF-8 with BOM and are edited in Excel. They are stored literally,
+# with no line-ending conversion, so the file on disk, the blob in the index and the blob on
+# the server are always the same bytes. The BOM is what makes Excel read the Chinese column
+# names correctly, and Excel copes with either line ending.
+*.csv        -text
