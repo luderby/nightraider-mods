@@ -1,0 +1,18 @@
+# Treat every file as binary by default: what is committed is exactly what is on disk.
+# Without this, a machine with core.autocrlf=true reports every text file as modified even
+# though the committed bytes already match.
+* -text
+
+# Source, docs and scripts are UTF-8 with LF.
+*.cs         text eol=lf
+*.csproj     text eol=lf
+*.props      text eol=lf
+*.md         text eol=lf
+*.ps1        text eol=lf
+*.json       text eol=lf
+.gitignore   text eol=lf
+.gitattributes text eol=lf
+
+# The tier tables are UTF-8 with BOM and are edited in Excel, so CRLF suits them.
+# The BOM is what makes Excel read the Chinese column names correctly.
+*.csv        text eol=crlf
