@@ -1,0 +1,60 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>NightRaider.RareTint</AssemblyName>
+    <RootNamespace>NightRaider.RareTint</RootNamespace>
+    <Version>1.0.0</Version>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <DebugType>none</DebugType>
+    <NoWarn>$(NoWarn);CS0169;CS0414;CS0649</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Game folder; set NR_GAME_DIR or edit NrGameDir in Directory.Build.props. -->
+    <!-- GameDir is resolved in Directory.Build.props. -->
+    <ManagedDir>$(GameDir)\NightRaider_Data\Managed</ManagedDir>
+    <PluginsDir>$(GameDir)\BepInEx\plugins</PluginsDir>
+    <!--
+      BepInEx is a third-party loader and is not part of this repository, so it is searched for
+      in three places: an already-modded game folder, a libs folder you can populate by hand,
+      and the copy inside the release package once that package is extracted in place. BUILD.md.
+    -->
+    <LibCoreDir>$(NrLibCoreDir)</LibCoreDir>
+    <PkgCoreDir>$(RepoRoot)releases\refresh-shop-tint\NightRaider_RefreshShop_Tint_v1.3\BepInEx\core</PkgCoreDir>
+    <BepInExCoreDir Condition="Exists('$(GameDir)\BepInEx\core\BepInEx.dll')">$(GameDir)\BepInEx\core</BepInExCoreDir>
+    <BepInExCoreDir Condition="'$(BepInExCoreDir)' == '' AND Exists('$(LibCoreDir)\BepInEx.dll')">$(LibCoreDir)</BepInExCoreDir>
+    <BepInExCoreDir Condition="'$(BepInExCoreDir)' == '' AND Exists('$(PkgCoreDir)\BepInEx.dll')">$(PkgCoreDir)</BepInExCoreDir>
+    <BepInExCoreDir Condition="'$(BepInExCoreDir)' == ''">$(LibCoreDir)</BepInExCoreDir>
+    <!-- Tier table; the repo copy is the authoritative source. -->
+    <TierTableSrc>$(RepoRoot)tier-tables\NightRaider_item_tiers.csv</TierTableSrc>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="BepInEx"><HintPath>$(BepInExCoreDir)\BepInEx.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="0Harmony"><HintPath>$(BepInExCoreDir)\0Harmony.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Assembly-CSharp"><HintPath>$(ManagedDir)\Assembly-CSharp.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine"><HintPath>$(ManagedDir)\UnityEngine.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>$(ManagedDir)\UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.UI"><HintPath>$(ManagedDir)\UnityEngine.UI.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.UIModule"><HintPath>$(ManagedDir)\UnityEngine.UIModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.IMGUIModule"><HintPath>$(ManagedDir)\UnityEngine.IMGUIModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.InputLegacyModule"><HintPath>$(ManagedDir)\UnityEngine.InputLegacyModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.TextRenderingModule"><HintPath>$(ManagedDir)\UnityEngine.TextRenderingModule.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+
+  <Target Name="CopyPluginToGame" AfterTargets="Build" Condition="Exists('$(PluginsDir)')">
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(PluginsDir)" />
+    <!-- The tier table is shared with the other mods; ship a copy so a standalone
+         install of this mod alone still works. -->
+    <Copy SourceFiles="$(TierTableSrc)" DestinationFolder="$(PluginsDir)"
+          Condition="Exists('$(TierTableSrc)')" SkipUnchangedFiles="true"
+          ContinueOnError="true" />
+    <Message Importance="high" Text="Installed plugin -> $(PluginsDir)\$(TargetFileName)" />
+  </Target>
+
+</Project>

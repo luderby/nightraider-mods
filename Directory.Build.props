@@ -1,0 +1,58 @@
+<Project>
+
+  <!--
+    Shared build settings for the Night Raider mods.
+
+    Nothing here is required if you only want the prebuilt mods: use the packages under
+    releases/. This file exists so the three plugins can be rebuilt from source.
+
+    Point NR_GAME_DIR at your game folder (the one containing NightRaider.exe) either by
+    editing the default below or by setting the environment variable before building:
+
+        $env:NR_GAME_DIR = 'D:\Steam\steamapps\common\Night Raider\NightRaider'
+        dotnet build src\RareTint -c Release
+
+    The build needs four things that are not part of this repository, because they are the
+    game's own files or a third-party loader:
+
+        <GameDir>\NightRaider_Data\Managed\Assembly-CSharp.dll
+        <GameDir>\NightRaider_Data\Managed\UnityEngine.*.dll
+        BepInEx 5.4.x  (BepInEx.dll + 0Harmony.dll)
+
+    BepInEx is searched for in this order: the game folder, then a libs\BepInEx\core folder
+    you can create here, then the copy shipped inside the release package once that package
+    has been extracted in place. See BUILD.md.
+  -->
+
+  <!--
+    RepoRoot is evaluated here on purpose: MSBuildThisFileDirectory is the directory of the
+    file being evaluated, so in this file it is the repo root, while the same expression
+    inside a project under src\ would already be one level deeper.
+  -->
+  <PropertyGroup>
+    <RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <NrGameDir Condition="'$(NrGameDir)' == '' AND '$(NR_GAME_DIR)' != ''">$(NR_GAME_DIR)</NrGameDir>
+    <NrGameDir Condition="'$(NrGameDir)' == ''">..\NightRaider</NrGameDir>
+    <NrLibCoreDir Condition="'$(NrLibCoreDir)' == ''">$(RepoRoot)libs\BepInEx\core</NrLibCoreDir>
+  </PropertyGroup>
+
+  <!--
+    NrGameDir may be relative (resolved against the repo root) or absolute (which is what
+    NR_GAME_DIR normally is). System.IO.Path.GetFullPath cannot combine two rooted paths, so
+    the absolute case is passed through untouched.
+  -->
+  <PropertyGroup>
+    <NrGameDirRooted>$([System.IO.Path]::IsPathRooted('$(NrGameDir)'))</NrGameDirRooted>
+    <GameDir Condition="'$(NrGameDirRooted)' == 'true'">$(NrGameDir)</GameDir>
+    <GameDir Condition="'$(NrGameDirRooted)' != 'true'">$([System.IO.Path]::GetFullPath('$(RepoRoot)$(NrGameDir)'))</GameDir>
+  </PropertyGroup>
+
+  <Target Name="NrCheckGameDir" BeforeTargets="ResolveAssemblyReferences">
+    <Error Condition="!Exists('$(GameDir)\NightRaider_Data\Managed\Assembly-CSharp.dll')"
+           Text="Game assemblies not found at '$(GameDir)'. Set NR_GAME_DIR to your Night Raider folder (the one containing NightRaider.exe) or edit NrGameDir in Directory.Build.props. See BUILD.md." />
+  </Target>
+
+</Project>

@@ -1,0 +1,24 @@
+# 构建产物
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+.vs/
+
+# 本地放置的游戏/BepInEx 引用程序集（受版权保护，不入库）
+libs/
+libs/BepInEx/
+libs/Managed/
+
+# 就地解压出来的发布包内容
+releases/*/NightRaider_*/BepInEx/
+releases/*/NightRaider_*/winhttp.dll
+releases/*/NightRaider_*/doorstop_config.ini
+releases/*/NightRaider_*/.doorstop_version
+releases/*/NightRaider_*/install.ps1
+releases/*/NightRaider_*/uninstall.ps1
+releases/*/NightRaider_*/一键*.bat
+releases/*/NightRaider_*/*.txt
+
+# 安装脚本写入的运行痕迹
+_上次安装的目录.txt
