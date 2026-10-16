@@ -1,27 +1,48 @@
 # Night Raider 自制 MOD
 
-《夜袭者 / Night Raider》的三个 BepInEx 插件，**分成两个互不依赖的安装包**。
+《夜袭者 / Night Raider》的三个 BepInEx 插件，**分成三个互不依赖的安装包**，按需要挑着装。
 
-| 包 | 内容 | 按键 |
-|---|---|---|
-| **[刷新商店 + 物品底色](releases/refresh-shop-tint/)** | 刷新商店 + 物品稀有度底色 | **F7** |
-| **[物品商店](releases/item-shop/)** | 稀有商品购物商店 | **F8** |
+| 包 | 内容 | 按键 | 适合谁 |
+|---|---|---|---|
+| **[仅刷新商店](releases/refresh-shop-only/)** | 只有刷新商店 | **F7** | 只想要商店、不要物品上色 |
+| **[刷新商店 + 物品底色](releases/refresh-shop-tint/)** | 刷新商店 + 稀有度底色 | **F7** | 想要完整效果（推荐） |
+| **[物品商店](releases/item-shop/)** | 稀有商品购物商店 | **F8** | 想要第二个商店 |
 
-两个包**可以只装一个，也可以都装**，共用同一张稀有度表。
+三个包**可以任意组合**：只装一个、装两个、或者三个都装都行，共用同一张稀有度表。
 
 ---
 
 ## 下载与安装
 
-到 [`releases/`](releases/) 下选包，解压后**双击 `一键安装.bat`** 即可：
+到 [`releases/`](releases/) 下选包，**解压整个压缩包**，然后**双击 `一键安装.bat`**：
 
 ```
+releases/refresh-shop-only/NightRaider_RefreshShop_Only_v1.1.zip   →  只要 F7 刷新商店
 releases/refresh-shop-tint/NightRaider_RefreshShop_Tint_v1.3.zip   →  F7 刷新商店 + 物品底色
 releases/item-shop/NightRaider_ItemShop_v1.3.5.zip                 →  F8 物品商店
 ```
 
-安装脚本会自动查找游戏目录、备份已有 MOD、复制文件并校验。
-卸载双击 `一键卸载.bat`。包里已带 BepInEx 5.4.23.5 运行库，**不需要另外装 BepInEx**。
+安装程序会自动找到游戏目录、备份、复制、校验，全程不用你判断。
+**没装过 MOD 的人**：包里自带 BepInEx 5.4.23.5，装完直接能用，不需要事先准备任何东西。
+卸载双击 `一键卸载.bat`。
+
+### 和别的 MOD 不会冲突
+
+三个包的安装程序都遵守同一条原则：**缺什么补什么，已有的东西一个字节都不动。**
+
+| 已经存在的文件 | 安装程序的处理 |
+|---|---|
+| `winhttp.dll`、`BepInEx\core\` 运行库 | 已有 → **原样跳过**，绝不覆盖 |
+| `BepInEx\plugins\` 里别的 MOD | 只往目录里**新增**本包的文件 |
+| 稀有度表 `NightRaider_item_tiers.csv` | 已有 → 跳过，不会冲掉你在用的表 |
+| 你自己改过的配置（按键、费用） | 不覆盖 |
+| 同名文件被本程序覆盖的 | 一律**先备份**，可完整还原 |
+
+卸载也是**外科手术式**的：只拿掉本 MOD 的文件，**绝不整目录删除 `BepInEx\`**
+（这一点很关键 —— 整目录删除会连带干掉你之后装的其它 MOD）。
+共用的稀有度表在还有别的 MOD 时会保留。
+
+所以**先装哪个、后装哪个都没关系**，任意顺序、任意组合都不会互相破坏。
 
 手动安装的话，把 `BepInEx/` 和 `winhttp.dll` / `doorstop_config.ini` / `.doorstop_version`
 一起放进游戏根目录（`NightRaider.exe` 所在目录）。
