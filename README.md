@@ -140,14 +140,17 @@ dotnet build src\RareShop    -c Release
 
 ```
 ├── releases/
-│   ├── refresh-shop-tint/   刷新商店 + 物品底色 安装包
-│   └── item-shop/           物品商店 安装包
+│   ├── refresh-shop-only/   只有刷新商店（F7）
+│   ├── refresh-shop-tint/   刷新商店 + 物品底色（F7）
+│   └── item-shop/           物品商店（F8）
 ├── src/
 │   ├── RareRefresh/         刷新商店（F7）
 │   ├── RareTint/            物品底色
-│   └── RareShop/            物品商店（F8）
+│   ├── RareShop/            物品商店（F8）
+│   └── HireNpc/             雇请 NPC（制作中）
 ├── tier-tables/             稀有度表（运行时用 + 分类明细）
 ├── docs/                    详细说明与变更记录
+├── tools/                   维护脚本
 ├── Directory.Build.props    共享构建配置（游戏路径在这里）
 ├── BUILD.md                 构建说明
 └── LICENSE
